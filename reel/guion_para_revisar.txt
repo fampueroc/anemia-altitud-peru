@@ -1,0 +1,59 @@
+GUION DEL REEL: ¿BAJÓ LA ANEMIA INFANTIL EN TODO EL PERÚ?
+7 escenas · 186 palabras · unos 78 s de narración + 4,5 s de créditos
+
+============================================================
+TEXTO COMPLETO (lo que dice la voz)
+============================================================
+
+Con el criterio de la OMS que el Perú adoptó en el dos mil veinticuatro, la anemia infantil baja de cuarenta y tres coma cuatro a treinta y cuatro coma nueve por ciento.
+Pero no bajó igual en todo el país: en cinco departamentos el cambio no se distingue de cero, ni en el dos mil veinticuatro ni en el dos mil veinticinco.
+La diferencia depende de la altitud: la guía nueva ajusta la hemoglobina de otra forma según dónde viven las niñas y los niños.
+Entre quinientos y dos mil quinientos metros, con el criterio nuevo la anemia sube entre siete y once puntos.
+Y por encima de tres mil metros, baja entre catorce y treinta y cuatro puntos.
+Eso cambia el orden: Amazonas, Arequipa y Cajamarca suben en el orden de anemia, y Pasco baja, en los dos años.
+Este análisis no dice cuál criterio es mejor: muestra que la cifra y el orden de varios departamentos dependen del criterio que se use. Por eso, al comparar, hay que mirar con cuál se calculó. El tablero con todos los datos está en mi perfil.
+
+============================================================
+ESCENA POR ESCENA
+============================================================
+
+ESCENA 1
+  Voz:       Con el criterio de la OMS que el Perú adoptó en el dos mil veinticuatro, la anemia infantil baja de cuarenta y tres coma cuatro a treinta y cuatro coma nueve por ciento.
+  Pantalla:  43,4 % → 34,9 % | Anemia de 6 a 35 meses, ENDES 2025
+  Fuente:    datos/procesados/anemia_departamento_2025.csv, fila Perú; INEI ENDES 2025
+
+ESCENA 2
+  Voz:       Pero no bajó igual en todo el país: en cinco departamentos el cambio no se distingue de cero, ni en el dos mil veinticuatro ni en el dos mil veinticinco.
+  Pantalla:  5 | departamentos sin cambio significativo, 2024 y 2025
+  Fuente:    Amazonas, Arequipa, Cajamarca, Huánuco, Moquegua; replica_departamento_2024_2025.csv
+
+ESCENA 3
+  Voz:       La diferencia depende de la altitud: la guía nueva ajusta la hemoglobina de otra forma según dónde viven las niñas y los niños.
+  Pantalla:  La clave está en el ajuste por altitud
+  Fuente:    WHO 2024, Tabla 4; RM 363-2022 (CDC 1989)
+
+ESCENA 4
+  Voz:       Entre quinientos y dos mil quinientos metros, con el criterio nuevo la anemia sube entre siete y once puntos.
+  Pantalla:  +7 a +11 | puntos entre 500 y 2499 m de altitud
+  Fuente:    anemia_altitud_2025.csv: +6,9; +11,2; +7,1; +6,9
+
+ESCENA 5
+  Voz:       Y por encima de tres mil metros, baja entre catorce y treinta y cuatro puntos.
+  Pantalla:  −14 a −34 | puntos por encima de 3000 m
+  Fuente:    anemia_altitud_2025.csv: −13,6; −23,4; −34,1
+
+ESCENA 6
+  Voz:       Eso cambia el orden: Amazonas, Arequipa y Cajamarca suben en el orden de anemia, y Pasco baja, en los dos años.
+  Pantalla:  23 → 11 | puesto de Cajamarca en anemia, 2025
+  Fuente:    puestos robustos en 2024 y 2025; Cajamarca 23 → 11 en 2025
+
+ESCENA 7
+  Voz:       Este análisis no dice cuál criterio es mejor: muestra que la cifra y el orden de varios departamentos dependen del criterio que se use. Por eso, al comparar, hay que mirar con cuál se calculó. El tablero con todos los datos está en mi perfil.
+  Pantalla:  Mira el tablero: enlace en mi perfil
+
+CRÉDITOS (pantalla final, sin voz)
+  - Datos: INEI, ENDES 2024 y 2025, niñas y niños de 6 a 35 meses
+  - Criterios: OMS (2024) y MINSA, RM 251-2024 y RM 363-2022
+  - Análisis y voz: Fiorella Ampuero
+  - Voz generada con IA (Qwen3-TTS) a partir de mi voz
+  - Música: "Wholesome", Kevin MacLeod (incompetech.com), CC BY 4.0

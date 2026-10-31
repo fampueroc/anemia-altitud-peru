@@ -1,0 +1,64 @@
+{
+  "titulo": "¿Bajó la anemia infantil en todo el Perú?",
+  "estado": "BORRADOR: falta la revisión de la autora",
+  "escenas": [
+    {
+      "frase": "Con el criterio de la OMS que el Perú adoptó en el dos mil veinticuatro, la anemia infantil baja de cuarenta y tres coma cuatro a treinta y cuatro coma nueve por ciento.",
+      "cifra": "43,4 % → 34,9 %",
+      "etiqueta": "Anemia de 6 a 35 meses, ENDES 2025",
+      "fuente": "datos/procesados/anemia_departamento_2025.csv, fila Perú; INEI ENDES 2025",
+      "cifra_en_texto": true
+    },
+    {
+      "frase": "Pero no bajó igual en todo el país: en cinco departamentos el cambio no se distingue de cero, ni en el dos mil veinticuatro ni en el dos mil veinticinco.",
+      "cifra": "5",
+      "etiqueta": "departamentos sin cambio significativo, 2024 y 2025",
+      "fuente": "Amazonas, Arequipa, Cajamarca, Huánuco, Moquegua; replica_departamento_2024_2025.csv",
+      "cifra_en_texto": true
+    },
+    {
+      "frase": "La diferencia depende de la altitud: la guía nueva ajusta la hemoglobina de otra forma según dónde viven las niñas y los niños.",
+      "cifra": "",
+      "etiqueta": "La clave está en el ajuste por altitud",
+      "fuente": "WHO 2024, Tabla 4; RM 363-2022 (CDC 1989)",
+      "cifra_en_texto": true
+    },
+    {
+      "frase": "Entre quinientos y dos mil quinientos metros, con el criterio nuevo la anemia sube entre siete y once puntos.",
+      "cifra": "+7 a +11",
+      "etiqueta": "puntos entre 500 y 2499 m de altitud",
+      "fuente": "anemia_altitud_2025.csv: +6,9; +11,2; +7,1; +6,9",
+      "cifra_en_texto": true
+    },
+    {
+      "frase": "Y por encima de tres mil metros, baja entre catorce y treinta y cuatro puntos.",
+      "cifra": "−14 a −34",
+      "etiqueta": "puntos por encima de 3000 m",
+      "fuente": "anemia_altitud_2025.csv: −13,6; −23,4; −34,1",
+      "cifra_en_texto": true
+    },
+    {
+      "frase": "Eso cambia el orden: Amazonas, Arequipa y Cajamarca suben en el orden de anemia, y Pasco baja, en los dos años.",
+      "cifra": "23 → 11",
+      "etiqueta": "puesto de Cajamarca en anemia, 2025",
+      "fuente": "puestos robustos en 2024 y 2025; Cajamarca 23 → 11 en 2025",
+      "cifra_en_texto": true
+    },
+    {
+      "frase": "Este análisis no dice cuál criterio es mejor: muestra que la cifra y el orden de varios departamentos dependen del criterio que se use. Por eso, al comparar, hay que mirar con cuál se calculó. El tablero con todos los datos está en mi perfil.",
+      "cifra": "",
+      "etiqueta": "Mira el tablero: enlace en mi perfil",
+      "fuente": "",
+      "cifra_en_texto": true
+    }
+  ],
+  "creditos": [
+    "Datos: INEI, ENDES 2024 y 2025, niñas y niños de 6 a 35 meses",
+    "Criterios: OMS (2024) y MINSA, RM 251-2024 y RM 363-2022",
+    "Análisis y voz: Fiorella Ampuero",
+    "Voz generada con IA (Qwen3-TTS) a partir de mi voz",
+    "Música: \"Wholesome\", Kevin MacLeod (incompetech.com), CC BY 4.0"
+  ],
+  "hashtags": ["DataScience", "Python", "SaludPublica", "Anemia", "Peru"],
+  "posts": {"linkedin": "[pendiente]", "x": "[pendiente]", "facebook": "[pendiente]"}
+}

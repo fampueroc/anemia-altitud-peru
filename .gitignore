@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+# Microdatos del INEI: se vuelven a bajar con scripts/obtener_datos.py
+datos/originales/*
+!datos/originales/.gitkeep
+# Claves y variables locales
+.env
+# Reel: la grabación de voz, los modelos y los videos intermedios no se versionan
+reel/recursos/mi_voz*
+reel/salidas/
+reel/fuentes/
+# Pistas de música: se bajan de incompetech.com (CC BY 4.0); ver reel/README.md
+reel/recursos/musica_opciones/
+reel/recursos/musica.mp3

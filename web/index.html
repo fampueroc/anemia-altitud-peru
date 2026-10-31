@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Bajó la anemia infantil en todo el Perú?</title>
+<meta name="description" content="Cómo cambia la anemia infantil en el Perú al pasar del criterio RM 363-2022-MINSA al de la OMS 2024. ENDES 2025.">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --s1: #2a78d6;          /* RM 363-2022 */
+  --s2: #eb6834;          /* OMS 2024 */
+  --neg: #1c5cab;         /* baja */
+  --pos: #b8302f;         /* sube */
+  --mid: #f0efec;         /* sin cambio */
+  --ns: #c3c2b7;          /* no significativo */
+  --seq-lo: #cde2fb;
+  --seq-hi: #0d366b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --neg: #5598e7; --pos: #e66767; --mid: #383835; --ns: #52514e;
+    --seq-lo: #1c2a3d; --seq-hi: #9ec5f4;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --s1: #3987e5; --s2: #d95926; --neg: #5598e7; --pos: #e66767; --mid: #383835; --ns: #52514e;
+  --seq-lo: #1c2a3d; --seq-hi: #9ec5f4;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 28px; line-height: 1.2; margin: 0 0 8px; font-weight: 650; }
+h2 { font-size: 17px; margin: 0 0 4px; font-weight: 600; }
+p { margin: 0 0 12px; }
+.sub { color: var(--ink-2); max-width: 760px; }
+.nota { color: var(--muted); font-size: 13px; }
+a { color: var(--s1); }
+.filtros { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; margin: 20px 0;
+  padding: 12px 0; border-top: 1px solid var(--grid); border-bottom: 1px solid var(--grid);
+  position: sticky; top: 0; background: var(--page); z-index: 5; }
+.filtros label { display: flex; flex-direction: column; font-size: 12px; color: var(--ink-2); gap: 4px; }
+select, .seg button { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .lab { font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+.kpi .val { font-size: 32px; font-weight: 600; line-height: 1.15; margin-top: 4px; }
+.kpi .ic { font-size: 12px; color: var(--muted); }
+.key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; min-width: 0; }
+.card .desc { color: var(--ink-2); font-size: 13px; margin-bottom: 8px; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); margin: 4px 0 8px; align-items: center; }
+.leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+svg { display: block; width: 100%; overflow: visible; }
+svg text { fill: var(--ink-2); font-size: 11px; }
+.eje line, .eje path { stroke: var(--axis); }
+.eje text { fill: var(--muted); }
+.rejilla line { stroke: var(--grid); }
+.rejilla path { display: none; }
+#tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12); opacity: 0; max-width: 280px; z-index: 10; }
+#tip b { font-weight: 600; }
+.hallazgos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 20px; }
+.hallazgo { border-left: 3px solid var(--ink); padding: 4px 12px; }
+.hallazgo b { display: block; margin-bottom: 2px; }
+details { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 12px; }
+summary { cursor: pointer; font-weight: 600; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 4px 8px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+.tabla-wrap { overflow-x: auto; }
+.tema { position: absolute; top: 16px; right: 16px; }
+@media (max-width: 860px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .grid2, .hallazgos { grid-template-columns: 1fr; }
+  .filtros { position: static; }
+  h1 { font-size: 23px; }
+  .kpi .val { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header style="position:relative">
+    <h1>¿Bajó la anemia infantil en todo el Perú?</h1>
+    <p class="sub">En 2024 el Perú adoptó la guía de la OMS para diagnosticar anemia. Con el criterio nuevo, la anemia en niñas y niños de 6 a 35 meses pasa de 43,4 % a 34,9 %. Pero el cambio no fue igual en todo el país: depende de la altitud donde viven.</p>
+    <p class="nota">ENDES 2025 (INEI), microdatos · Réplica con la ENDES 2024 · Cálculo propio validado contra las cifras publicadas por el INEI · Intervalos de confianza al 95 %</p>
+  </header>
+
+  <section class="hallazgos" aria-label="Hallazgos">
+    <div class="hallazgo"><b>1. La caída no fue pareja</b>En 2025 baja en 20 de 26 ámbitos. En 5 (Amazonas, Arequipa, Cajamarca, Huánuco y Moquegua) el cambio no se distingue de cero, ni en 2025 ni en 2024.</div>
+    <div class="hallazgo"><b>2. La altitud explica el patrón</b>Entre 500 y 2499 m la nueva fórmula sube la anemia entre 7 y 11 puntos. Por encima de 3000 m la baja entre 14 y 34 puntos. El patrón se repite con la ENDES 2024.</div>
+    <div class="hallazgo"><b>3. Cambia el orden</b>Con los datos de 2025 y de 2024, Amazonas, Arequipa y Cajamarca suben en el orden y Pasco baja. Puno sigue primero con ambos criterios.</div>
+  </section>
+
+  <div class="filtros" role="group" aria-label="Filtros">
+    <label>Mapa
+      <div class="seg" id="f-criterio">
+        <button data-v="363" aria-pressed="false">RM 363-2022</button>
+        <button data-v="oms" aria-pressed="true">OMS 2024</button>
+        <button data-v="cambio" aria-pressed="false">Cambio</button>
+      </div>
+    </label>
+    <label for="f-ambito">Ámbito
+      <select id="f-ambito"><option value="Perú">Perú (nacional)</option></select>
+    </label>
+    <label for="f-altitud">Altitud mediana del ámbito
+      <select id="f-altitud">
+        <option value="todas">Todas</option>
+        <option value="baja">Menos de 500 m</option>
+        <option value="media">500 a 2499 m</option>
+        <option value="alta">2500 m o más</option>
+      </select>
+    </label>
+  </div>
+
+  <section class="kpis" id="kpis" aria-live="polite"></section>
+
+  <div class="grid2">
+    <div class="card">
+      <h2 id="t-mapa">Anemia por ámbito</h2>
+      <p class="desc" id="d-mapa"></p>
+      <div class="leyenda" id="ley-mapa"></div>
+      <div id="mapa"></div>
+    </div>
+    <div class="card">
+      <h2>Cambio al pasar a OMS 2024, por ámbito</h2>
+      <p class="desc">Puntos porcentuales (OMS 2024 menos RM 363-2022) con intervalo de 95 %. En gris, los cambios que no se distinguen de cero.</p>
+      <div class="leyenda">
+        <span><i class="key" style="background:var(--neg)"></i>Baja</span>
+        <span><i class="key" style="background:var(--pos)"></i>Sube</span>
+        <span><i class="key" style="background:var(--ns)"></i>No significativo</span>
+      </div>
+      <div id="cambio"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Anemia según la altitud donde viven las niñas y niños</h2>
+    <p class="desc">Perú, franjas de 500 m (las de la Tabla 4 de la guía OMS 2024). Banda: intervalo de 95 %.</p>
+    <div class="leyenda">
+      <span><i class="key" style="background:var(--s1)"></i>RM 363-2022-MINSA</span>
+      <span><i class="key" style="background:var(--s2)"></i>OMS 2024 / RM 251-2024-MINSA</span>
+    </div>
+    <div id="altitud"></div>
+  </div>
+
+  <div class="card">
+    <h2>¿Se repite en 2024?</h2>
+    <p class="desc">Cambio al pasar a OMS 2024 por franja de altitud (puntos porcentuales, intervalo de 95 %), con la ENDES 2025 y la ENDES 2024. Dos de cada tres conglomerados de 2025 ya estaban en 2024 (con otras viviendas), así que las dos muestras no son independientes. Por eso se muestra también 2024 solo con los conglomerados que no están en 2025.</p>
+    <div class="leyenda">
+      <span><svg width="12" height="12" style="display:inline;width:12px"><circle cx="6" cy="6" r="4.5" fill="var(--ink)"/></svg>ENDES 2025</span>
+      <span><svg width="12" height="12" style="display:inline;width:12px"><circle cx="6" cy="6" r="4.5" fill="var(--muted)"/></svg>ENDES 2024</span>
+      <span><svg width="12" height="12" style="display:inline;width:12px"><circle cx="6" cy="6" r="4" fill="var(--surface)" stroke="var(--muted)" stroke-width="2"/></svg>ENDES 2024, sin conglomerados repetidos</span>
+    </div>
+    <div id="replica"></div>
+  </div>
+
+  <div class="card">
+    <h2>¿Qué parte del cambio viene de cada regla?</h2>
+    <p class="desc">El criterio OMS 2024 cambió dos cosas a la vez. Cada panel aplica solo uno de los cambios sobre el criterio anterior (puntos porcentuales).</p>
+    <div class="grid2" style="gap:24px">
+      <div><h2 style="font-size:14px">Nueva fórmula de altitud</h2><div id="ef-altitud"></div></div>
+      <div><h2 style="font-size:14px">Nuevo punto de corte para 6–23 meses (10,5 g/dL)</h2><div id="ef-corte"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Orden de los ámbitos: de mayor a menor anemia</h2>
+    <p class="desc">Puesto con cada criterio, ENDES 2025. Resaltados, los cambios de puesto robustos en 2025 y también en 2024: su intervalo de 95 % (bootstrap de diseño, 2000 réplicas) no incluye cero en ninguno de los dos años. San Martín y Ucayali son robustos solo en 2025; Huancavelica y Moquegua, solo en 2024. El puesto exacto es incierto; la dirección de los cambios resaltados, no.</p>
+    <div class="leyenda">
+      <span><i class="key" style="background:var(--pos)"></i>Sube en el orden (robusto en 2025 y 2024)</span>
+      <span><i class="key" style="background:var(--neg)"></i>Baja en el orden (robusto en 2025 y 2024)</span>
+      <span><i class="key" style="background:var(--ns)"></i>Sin cambio robusto en los dos años</span>
+    </div>
+    <div id="puestos"></div>
+  </div>
+
+  <details>
+    <summary>Tabla de datos</summary>
+    <div class="tabla-wrap"><table id="tabla"></table></div>
+  </details>
+
+  <details open>
+    <summary>Metodología, fuentes y limitaciones</summary>
+    <h2 style="margin-top:12px">Datos</h2>
+    <p>Microdatos de la Encuesta Demográfica y de Salud Familiar (ENDES) 2025 del INEI: módulos 1629 (RECH0, RECH1) y 1638 (RECH6). Niñas y niños de 6 a 35 meses, residentes que durmieron en el hogar la noche anterior, con hemoglobina medida (n = 9306). Para la réplica, los mismos módulos de la ENDES 2024 (n = 9959).</p>
+    <h2>Criterios</h2>
+    <p><b>RM 363-2022-MINSA:</b> la hemoglobina se ajusta por altitud con la fórmula del CDC (1989) desde 1000 m; hay anemia si la hemoglobina ajustada es menor a 11,0 g/dL.<br>
+    <b>OMS 2024 / RM 251-2024-MINSA (NTS 213-MINSA/DGIESP-2024):</b> ajuste (g/L) = 0,0056384·m + 0,0000003·m² desde 500 m; hay anemia si la hemoglobina ajustada es menor a 10,5 g/dL (6–23 meses) o a 11,0 g/dL (24–59 meses).</p>
+    <h2>Validación</h2>
+    <p>El cálculo reproduce el 100 % de la hemoglobina ajustada y de la clasificación de anemia del INEI. También reproduce las cifras nacionales con sus intervalos de confianza (43,4 % [42,1–44,7] y 34,9 % [33,7–36,1]) y las 46 cifras departamentales publicadas. Lima Metropolitana 2025 no se pudo contrastar: el capítulo del INEI para Lima Metropolitana (Endes15/Cap09) contiene el texto de Callao. Con la ENDES 2024, el mismo cálculo coincide con las 49 cifras departamentales verificables, incluida Lima Metropolitana (32,9 % y 24,0 %).</p>
+    <h2>Estimación</h2>
+    <p>Prevalencias ponderadas con errores estándar por linealización de Taylor (estratos y conglomerados de la ENDES). La incertidumbre del puesto se estima con bootstrap de diseño de Rao y Wu (1988).</p>
+    <h2>Limitaciones</h2>
+    <ul>
+      <li>Es un análisis descriptivo. Muestra cómo cambia la cifra según el criterio; no dice cuál criterio refleja mejor la condición biológica de los niños. Ese debate está abierto en la literatura (Sharma et al. 2019; Gonzales et al. 2025).</li>
+      <li>La ENDES es representativa a nivel nacional y departamental, no distrital. El panel por altitud agrupa conglomerados de todo el país.</li>
+      <li>La altitud es la del conglomerado, no la de cada vivienda.</li>
+      <li>"Altitud mediana del ámbito" sirve para filtrar; dentro de un departamento conviven altitudes muy distintas.</li>
+      <li>Se hacen 26 comparaciones a la vez; al 95 % podría aparecer un falso positivo por azar. Por eso solo se destacan los resultados que se repiten con la ENDES 2024.</li>
+      <li>La réplica con 2024 no es independiente: la ENDES rota un tercio de los conglomerados por año, y el 66,6 % de los de 2025 ya estaba en 2024 (con viviendas distintas). La coincidencia indica estabilidad. El patrón por altitud se mantiene también con los conglomerados de 2024 que no están en 2025.</li>
+    </ul>
+    <h2>Fuentes</h2>
+    <p class="nota">INEI (2026), ENDES 2025 Nacional y Departamental · INEI (2025), ENDES 2024, microdatos, ficha técnica e informes departamentales · WHO (2024), Guideline on haemoglobin cutoffs to define anaemia in individuals and populations · MINSA, RM 251-2024-MINSA y RM 363-2022-MINSA · CDC (1989), MMWR 38(22):400–404 · Sharma et al. (2019), Ann N Y Acad Sci 1450:190–203 · Hernández-Vásquez et al. (2025), Acta Médica Peruana · Gonzales et al. (2025), Inquiry 62 · Rao y Wu (1988), JASA 83:231–241 · Límites: INEI (2007), vía Geoservidor MINAM / GEOIDEP.</p>
+  </details>
+  <p class="nota">Proyecto académico, Diplomado de Data Science con Python (PUCP). Código y datos procesados en el repositorio.</p>
+</main>
+<div id="tip" role="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="data/datos.js"></script>
+<script>
+const D = window.DATOS;
+const fmt = d3.format(".1f");
+const num = v => fmt(v).replace(".", ",");
+const pp = v => (v > 0 ? "+" : v < 0 ? "−" : "") + num(Math.abs(v));
+const ppEje = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const tip = d3.select("#tip");
+const peru = D.ambitos.find(d => d.ambito === "Perú");
+const deps = D.ambitos.filter(d => d.ambito !== "Perú");
+const estado = { criterio: "oms", ambito: "Perú", altitud: "todas" };
+
+const NOTA_LIMA = "La cifra 2025 no se pudo contrastar con el INEI (error en su archivo); con la misma metodología, la de 2024 coincide con la publicada.";
+const ROBUSTO = d => d.puesto_robusto_ambos ? "Cambio de puesto robusto en 2025 y 2024"
+  : d.puesto_robusto ? "Cambio de puesto robusto solo en 2025"
+  : d.puesto_robusto_2024 ? "Cambio de puesto robusto solo en 2024" : "Cambio de puesto no concluyente";
+
+function mostrarTip(ev, html) {
+  tip.html(html).style("opacity", 1);
+  const w = tip.node().offsetWidth, h = tip.node().offsetHeight;
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - 14;
+  if (y + h > innerHeight - 8) y = ev.clientY - h - 14;
+  tip.style("left", x + "px").style("top", y + "px");
+}
+const ocultarTip = () => tip.style("opacity", 0);
+
+function enAltitud(d) {
+  const m = d.altitud_mediana_m;
+  return estado.altitud === "todas" || (estado.altitud === "baja" && m < 500)
+    || (estado.altitud === "media" && m >= 500 && m < 2500) || (estado.altitud === "alta" && m >= 2500);
+}
+
+function tipAmbito(d) {
+  return `<b>${d.ambito}</b><br>RM 363-2022: ${num(d.anemia_363)} % [${num(d.anemia_363_li)}–${num(d.anemia_363_ls)}]<br>`
+    + `OMS 2024: ${num(d.anemia_oms)} % [${num(d.anemia_oms_li)}–${num(d.anemia_oms_ls)}]<br>`
+    + `Cambio: ${pp(d.cambio_pp)} pts [${pp(d.cambio_li)} a ${pp(d.cambio_ls)}]<br>`
+    + `Cambio en 2024: ${pp(d.cambio_pp_2024)} pts [${pp(d.cambio_li_2024)} a ${pp(d.cambio_ls_2024)}]<br>`
+    + `<span style="color:var(--muted)">n = ${d.n} · altitud mediana ${d3.format(",")(Math.round(d.altitud_mediana_m)).replace(/,/g, " ")} m</span>`
+    + (d.ambito === "Lima Metropolitana" ? `<br><span style="color:var(--muted)">${NOTA_LIMA}</span>` : "");
+}
+
+// ---------- Filtros ----------
+const sel = d3.select("#f-ambito");
+deps.map(d => d.ambito).sort((a, b) => a.localeCompare(b, "es")).forEach(n => sel.append("option").attr("value", n).text(n));
+sel.on("change", e => { estado.ambito = e.target.value; dibujar(); });
+d3.select("#f-altitud").on("change", e => { estado.altitud = e.target.value; dibujar(); });
+d3.selectAll("#f-criterio button").on("click", function () {
+  estado.criterio = this.dataset.v;
+  d3.selectAll("#f-criterio button").attr("aria-pressed", function () { return this.dataset.v === estado.criterio; });
+  dibujar();
+});
+function elegir(nombre) {
+  estado.ambito = estado.ambito === nombre ? "Perú" : nombre;
+  sel.property("value", estado.ambito);
+  dibujar();
+}
+
+// ---------- KPIs ----------
+function kpis() {
+  const d = D.ambitos.find(x => x.ambito === estado.ambito);
+  const nsig = deps.filter(x => x.sin_cambio_ambos).length;
+  const tiles = [
+    { lab: "Anemia, RM 363-2022", key: "var(--s1)", val: num(d.anemia_363) + " %", ic: `IC 95 %: ${num(d.anemia_363_li)}–${num(d.anemia_363_ls)}` },
+    { lab: "Anemia, OMS 2024", key: "var(--s2)", val: num(d.anemia_oms) + " %", ic: `IC 95 %: ${num(d.anemia_oms_li)}–${num(d.anemia_oms_ls)}` },
+    { lab: "Cambio", val: pp(d.cambio_pp) + " pts", ic: `IC 95 %: ${pp(d.cambio_li)} a ${pp(d.cambio_ls)}${d.cambio_significativo ? "" : " · no significativo"}` },
+    d.ambito === "Perú"
+      ? { lab: "Ámbitos sin cambio significativo", val: `${nsig} de ${deps.length}`, ic: "En 2025 y en 2024: su intervalo de 95 % incluye cero" }
+      : { lab: "Puesto (1 = más anemia)", val: `${d.puesto_363} → ${d.puesto_oms}`, ic: `${ROBUSTO(d)} · 2024: ${d.puesto_363_2024} → ${d.puesto_oms_2024}` },
+  ];
+  d3.select("#kpis").selectAll(".kpi").data(tiles).join("div").attr("class", "kpi")
+    .html(t => `<div class="lab">${t.key ? `<i class="key" style="background:${t.key}"></i>` : ""}${t.lab}${d.ambito !== "Perú" && t.lab.startsWith("Anemia") ? " · " + d.ambito : ""}</div>`
+      + `<div class="val">${t.val}</div><div class="ic">${t.ic}</div>`
+      + (d.ambito === "Lima Metropolitana" && t.lab.startsWith("Cambio") ? `<div class="ic">${NOTA_LIMA}</div>` : ""));
+}
+
+// ---------- Mapa ----------
+function mapa() {
+  const cont = d3.select("#mapa"), W = cont.node().clientWidth, H = Math.round(W * 1.3);
+  const col = { "363": "anemia_363", oms: "anemia_oms", cambio: "cambio_pp" }[estado.criterio];
+  const porNombre = new Map(D.ambitos.map(d => [d.ambito, d]));
+  let color;
+  if (estado.criterio === "cambio") {
+    const m = 20;
+    color = d3.scaleDiverging([-m, 0, m], t => t < 0.5 ? d3.interpolateLab(css("--neg"), css("--mid"))(t * 2) : d3.interpolateLab(css("--mid"), css("--pos"))((t - 0.5) * 2));
+    d3.select("#t-mapa").text("Cambio al pasar a OMS 2024");
+    d3.select("#d-mapa").text("Puntos porcentuales. Azul: la anemia baja; rojo: sube. La escala es la misma en todos los ámbitos.");
+  } else {
+    color = d3.scaleSequential([20, 80], d3.interpolateLab(css("--seq-lo"), css("--seq-hi")));
+    d3.select("#t-mapa").text("Anemia en niñas y niños de 6 a 35 meses, " + (estado.criterio === "363" ? "RM 363-2022" : "OMS 2024"));
+    d3.select("#d-mapa").text("Porcentaje. La escala (20 % a 80 %) es la misma para los dos criterios, para poder compararlos.");
+  }
+  const ley = d3.select("#ley-mapa").html("");
+  const pasos = estado.criterio === "cambio" ? [-20, -10, 0, 10, 20] : [20, 35, 50, 65, 80];
+  pasos.forEach(v => ley.append("span").html(`<i class="key" style="background:${color(v)}"></i>${estado.criterio === "cambio" ? pp(v) : v + " %"}`));
+
+  const proj = d3.geoMercator().fitSize([W, H], D.geo);
+  const path = d3.geoPath(proj);
+  const svg = cont.selectAll("svg").data([0]).join("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("height", H)
+    .attr("role", "img").attr("aria-label", d3.select("#t-mapa").text());
+  svg.selectAll("path").data(D.geo.features, f => f.properties.ambito).join("path")
+    .attr("d", path)
+    .attr("fill", f => color(porNombre.get(f.properties.ambito)[col]))
+    .attr("stroke", f => f.properties.ambito === estado.ambito ? css("--ink") : css("--surface"))
+    .attr("stroke-width", f => f.properties.ambito === estado.ambito ? 3 : 0.8)
+    .attr("fill-opacity", f => enAltitud(porNombre.get(f.properties.ambito)) ? 1 : 0.25)
+    .attr("stroke-opacity", f => f.properties.ambito === estado.ambito || enAltitud(porNombre.get(f.properties.ambito)) ? 1 : 0.25)
+    .style("cursor", "pointer")
+    .on("mousemove", (ev, f) => mostrarTip(ev, tipAmbito(porNombre.get(f.properties.ambito))))
+    .on("mouseleave", ocultarTip)
+    .on("click", (ev, f) => elegir(f.properties.ambito));
+  svg.selectAll("path").filter(f => f.properties.ambito === estado.ambito).raise();
+}
+
+// ---------- Cambio por ámbito (punto + intervalo) ----------
+function filasOrdenadas() {
+  return deps.filter(enAltitud).sort((a, b) => a.cambio_pp - b.cambio_pp);
+}
+function cambio() {
+  const datos = filasOrdenadas();
+  const cont = d3.select("#cambio"), W = cont.node().clientWidth, fila = 20;
+  const m = { t: 8, r: 16, b: 28, l: 128 }, H = m.t + m.b + fila * datos.length;
+  const x = d3.scaleLinear([-30, 15], [m.l, W - m.r]);
+  const y = d3.scaleBand(datos.map(d => d.ambito), [m.t, H - m.b]).padding(0.3);
+  const svg = cont.selectAll("svg").data([0]).join("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("height", H)
+    .attr("role", "img").attr("aria-label", "Cambio por ámbito con intervalo de confianza");
+  svg.selectAll(".rejilla").data([0]).join("g").attr("class", "rejilla").attr("transform", `translate(0,${H - m.b})`)
+    .call(d3.axisBottom(x).ticks(6).tickSize(-(H - m.t - m.b)).tickFormat(""));
+  svg.selectAll(".eje").data([0]).join("g").attr("class", "eje").attr("transform", `translate(0,${H - m.b})`)
+    .call(d3.axisBottom(x).ticks(6).tickFormat(ppEje));
+  svg.selectAll(".cero").data([0]).join("line").attr("class", "cero").attr("x1", x(0)).attr("x2", x(0))
+    .attr("y1", m.t).attr("y2", H - m.b).attr("stroke", css("--muted")).attr("stroke-width", 1);
+  const tono = d => !d.cambio_significativo ? css("--ns") : d.cambio_pp < 0 ? css("--neg") : css("--pos");
+  const g = svg.selectAll(".f").data(datos, d => d.ambito).join(en => {
+    const g = en.append("g").attr("class", "f");
+    g.append("rect").attr("class", "hit"); g.append("text").attr("class", "nom");
+    g.append("line").attr("class", "ic"); g.append("circle");
+    return g;
+  });
+  g.attr("transform", d => `translate(0,${y(d.ambito) + y.bandwidth() / 2})`).style("cursor", "pointer")
+    .on("mousemove", (ev, d) => mostrarTip(ev, tipAmbito(d))).on("mouseleave", ocultarTip).on("click", (ev, d) => elegir(d.ambito));
+  g.select(".hit").attr("x", 0).attr("y", -fila / 2).attr("width", W).attr("height", fila).attr("fill", "transparent");
+  g.select(".nom").attr("x", m.l - 8).attr("dy", "0.32em").attr("text-anchor", "end").text(d => d.ambito)
+    .style("fill", d => d.ambito === estado.ambito ? css("--ink") : null).style("font-weight", d => d.ambito === estado.ambito ? 600 : null);
+  g.select(".ic").attr("x1", d => x(d.cambio_li)).attr("x2", d => x(d.cambio_ls)).attr("stroke", tono).attr("stroke-width", 2).attr("stroke-linecap", "round");
+  g.select("circle").attr("cx", d => x(d.cambio_pp)).attr("r", d => d.ambito === estado.ambito ? 6 : 4.5)
+    .attr("fill", tono).attr("stroke", css("--surface")).attr("stroke-width", 2);
+}
+
+// ---------- Por altitud ----------
+function altitud() {
+  const datos = D.altitud.map(d => ({ ...d, et: d.hasta ? `${d3.format(",")(d.desde).replace(",", " ")}–${d3.format(",")(d.hasta - 1).replace(",", " ")}` : `${d3.format(",")(d.desde).replace(",", " ")} o más` }));
+  const cont = d3.select("#altitud"), W = cont.node().clientWidth, H = 300;
+  const m = { t: 16, r: W < 600 ? 16 : 120, b: W < 600 ? 80 : 44, l: 40 };
+  const x = d3.scalePoint(datos.map(d => d.et), [m.l, W - m.r]).padding(0.3);
+  const y = d3.scaleLinear([0, 80], [H - m.b, m.t]);
+  const svg = cont.selectAll("svg").data([0]).join("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("height", H)
+    .attr("role", "img").attr("aria-label", "Anemia por franja de altitud con los dos criterios");
+  svg.selectAll(".rejilla").data([0]).join("g").attr("class", "rejilla").attr("transform", `translate(${m.l},0)`)
+    .call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat(""));
+  svg.selectAll(".ejey").data([0]).join("g").attr("class", "eje ejey").attr("transform", `translate(${m.l},0)`)
+    .call(d3.axisLeft(y).ticks(4).tickFormat(v => v + " %")).call(g => g.select(".domain").remove());
+  svg.selectAll(".ejex").data([0]).join("g").attr("class", "eje ejex").attr("transform", `translate(0,${H - m.b})`)
+    .call(d3.axisBottom(x)).selectAll("text").attr("transform", W < 600 ? "rotate(-35)" : null).attr("text-anchor", W < 600 ? "end" : "middle");
+  svg.selectAll(".titx").data([0]).join("text").attr("class", "titx").attr("x", (m.l + W - m.r) / 2).attr("y", H - 4)
+    .attr("text-anchor", "middle").text("Altitud del conglomerado (m s. n. m.)");
+  const series = [{ k: "anemia_363", c: css("--s1"), n: "RM 363-2022" }, { k: "anemia_oms", c: css("--s2"), n: "OMS 2024" }];
+  series.forEach(s => {
+    svg.selectAll(".banda-" + s.k).data([datos]).join("path").attr("class", "banda-" + s.k)
+      .attr("d", d3.area().x(d => x(d.et)).y0(d => y(d[s.k][1])).y1(d => y(d[s.k][2]))).attr("fill", s.c).attr("opacity", 0.12);
+    svg.selectAll(".linea-" + s.k).data([datos]).join("path").attr("class", "linea-" + s.k)
+      .attr("d", d3.line().x(d => x(d.et)).y(d => y(d[s.k][0]))).attr("fill", "none").attr("stroke", s.c)
+      .attr("stroke-width", 2).attr("stroke-linejoin", "round").attr("stroke-linecap", "round");
+    svg.selectAll(".pto-" + s.k).data(datos).join("circle").attr("class", "pto-" + s.k)
+      .attr("cx", d => x(d.et)).attr("cy", d => y(d[s.k][0])).attr("r", 4).attr("fill", s.c).attr("stroke", css("--surface")).attr("stroke-width", 2);
+    if (W >= 600) {
+      const u = datos[datos.length - 1];
+      svg.selectAll(".fin-" + s.k).data([u]).join("text").attr("class", "fin-" + s.k).attr("x", x(u.et) + 10).attr("y", y(u[s.k][0]))
+        .attr("dy", "0.32em").text(`${s.n}: ${num(u[s.k][0])} %`);
+    }
+  });
+  // Capa de lectura: una columna por franja
+  const paso = x.step();
+  svg.selectAll(".hitalt").data(datos).join("rect").attr("class", "hitalt").attr("x", d => x(d.et) - paso / 2).attr("width", paso)
+    .attr("y", m.t).attr("height", H - m.t - m.b).attr("fill", "transparent")
+    .on("mousemove", (ev, d) => mostrarTip(ev, `<b>${d.et} m</b> · n = ${d.n}<br>RM 363-2022: ${num(d.anemia_363[0])} % [${num(d.anemia_363[1])}–${num(d.anemia_363[2])}]<br>OMS 2024: ${num(d.anemia_oms[0])} % [${num(d.anemia_oms[1])}–${num(d.anemia_oms[2])}]<br>Cambio: ${pp(d.cambio[0])} pts [${pp(d.cambio[1])} a ${pp(d.cambio[2])}]`))
+    .on("mouseleave", ocultarTip);
+}
+
+// ---------- Réplica 2024 ----------
+function replica() {
+  const etq = d => d.hasta ? `${d3.format(",")(d.desde).replace(",", " ")}–${d3.format(",")(d.hasta - 1).replace(",", " ")}` : `${d3.format(",")(d.desde).replace(",", " ")} o más`;
+  const series = [
+    { anio: 2025, muestra: "completa", n: "ENDES 2025", fill: css("--ink"), stroke: css("--surface"), dx: -1 },
+    { anio: 2024, muestra: "completa", n: "ENDES 2024", fill: css("--muted"), stroke: css("--surface"), dx: 0 },
+    { anio: 2024, muestra: "sin_panel", n: "ENDES 2024, sin conglomerados repetidos", fill: css("--surface"), stroke: css("--muted"), dx: 1 },
+  ];
+  const datos = D.replica_altitud.map(d => ({ ...d, et: etq(d), s: series.find(s => s.anio === d.anio && s.muestra === d.muestra) }));
+  const bandas = [...new Set(datos.map(d => d.et))];
+  const cont = d3.select("#replica"), W = cont.node().clientWidth, H = 300;
+  const m = { t: 12, r: 16, b: W < 600 ? 80 : 44, l: 44 };
+  const x = d3.scaleBand(bandas, [m.l, W - m.r]).padding(0.2);
+  const y = d3.scaleLinear([-55, 20], [H - m.b, m.t]);
+  const off = Math.min(x.bandwidth() / 3.5, 14);
+  const svg = cont.selectAll("svg").data([0]).join("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("height", H)
+    .attr("role", "img").attr("aria-label", "Cambio por franja de altitud en 2025 y 2024");
+  svg.selectAll(".rejilla").data([0]).join("g").attr("class", "rejilla").attr("transform", `translate(${m.l},0)`)
+    .call(d3.axisLeft(y).ticks(5).tickSize(-(W - m.l - m.r)).tickFormat(""));
+  svg.selectAll(".ejey").data([0]).join("g").attr("class", "eje ejey").attr("transform", `translate(${m.l},0)`)
+    .call(d3.axisLeft(y).ticks(5).tickFormat(ppEje)).call(g => g.select(".domain").remove());
+  svg.selectAll(".ejex").data([0]).join("g").attr("class", "eje ejex").attr("transform", `translate(0,${H - m.b})`)
+    .call(d3.axisBottom(x)).selectAll("text").attr("transform", W < 600 ? "rotate(-35)" : null).attr("text-anchor", W < 600 ? "end" : "middle");
+  svg.selectAll(".titx").data([0]).join("text").attr("class", "titx").attr("x", (m.l + W - m.r) / 2).attr("y", H - 4)
+    .attr("text-anchor", "middle").text("Altitud del conglomerado (m s. n. m.)");
+  svg.selectAll(".cero").data([0]).join("line").attr("class", "cero").attr("x1", m.l).attr("x2", W - m.r)
+    .attr("y1", y(0)).attr("y2", y(0)).attr("stroke", css("--muted")).attr("stroke-width", 1);
+  const cx = d => x(d.et) + x.bandwidth() / 2 + d.s.dx * off;
+  svg.selectAll(".ic").data(datos).join("line").attr("class", "ic").attr("x1", cx).attr("x2", cx)
+    .attr("y1", d => y(d.cambio[1])).attr("y2", d => y(d.cambio[2])).attr("stroke", d => d.s.muestra === "sin_panel" ? d.s.stroke : d.s.fill)
+    .attr("stroke-width", 2).attr("stroke-linecap", "round");
+  svg.selectAll(".pto").data(datos).join("circle").attr("class", "pto").attr("cx", cx).attr("cy", d => y(d.cambio[0]))
+    .attr("r", 4.5).attr("fill", d => d.s.fill).attr("stroke", d => d.s.stroke).attr("stroke-width", 2);
+  svg.selectAll(".hitrep").data(bandas).join("rect").attr("class", "hitrep").attr("x", b => x(b) - x.step() * x.paddingInner() / 2)
+    .attr("width", x.step()).attr("y", m.t).attr("height", H - m.t - m.b).attr("fill", "transparent")
+    .on("mousemove", (ev, b) => mostrarTip(ev, `<b>${b} m</b><br>` + datos.filter(d => d.et === b)
+      .map(d => `${d.s.n}: ${pp(d.cambio[0])} pts [${pp(d.cambio[1])} a ${pp(d.cambio[2])}] · n = ${d.n}`).join("<br>")))
+    .on("mouseleave", ocultarTip);
+}
+
+// ---------- Descomposición ----------
+function efecto(id, col) {
+  const datos = filasOrdenadas();
+  const cont = d3.select(id), W = cont.node().clientWidth, fila = 18;
+  const m = { t: 4, r: 12, b: 26, l: 120 }, H = m.t + m.b + fila * datos.length;
+  const x = d3.scaleLinear([-20, 20], [m.l, W - m.r]);
+  const y = d3.scaleBand(datos.map(d => d.ambito), [m.t, H - m.b]).padding(0.25);
+  const svg = cont.selectAll("svg").data([0]).join("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("height", H)
+    .attr("role", "img").attr("aria-label", "Efecto por ámbito");
+  svg.selectAll(".rejilla").data([0]).join("g").attr("class", "rejilla").attr("transform", `translate(0,${H - m.b})`)
+    .call(d3.axisBottom(x).ticks(4).tickSize(-(H - m.t - m.b)).tickFormat(""));
+  svg.selectAll(".eje").data([0]).join("g").attr("class", "eje").attr("transform", `translate(0,${H - m.b})`)
+    .call(d3.axisBottom(x).ticks(4).tickFormat(ppEje));
+  const g = svg.selectAll(".f").data(datos, d => d.ambito).join(en => {
+    const g = en.append("g").attr("class", "f"); g.append("rect").attr("class", "hit"); g.append("text"); g.append("path"); return g;
+  });
+  g.attr("transform", d => `translate(0,${y(d.ambito)})`).style("cursor", "pointer")
+    .on("mousemove", (ev, d) => mostrarTip(ev, `<b>${d.ambito}</b><br>Solo nueva fórmula de altitud: ${pp(d.efecto_altitud_pp)} pts<br>Solo nuevo punto de corte: ${pp(d.efecto_corte_pp)} pts<br>Ambos (OMS 2024): ${pp(d.cambio_pp)} pts`))
+    .on("mouseleave", ocultarTip).on("click", (ev, d) => elegir(d.ambito));
+  g.select(".hit").attr("width", W).attr("height", y.bandwidth()).attr("fill", "transparent");
+  g.select("text").attr("x", m.l - 8).attr("y", y.bandwidth() / 2).attr("dy", "0.32em").attr("text-anchor", "end").text(d => d.ambito)
+    .style("fill", d => d.ambito === estado.ambito ? css("--ink") : null).style("font-weight", d => d.ambito === estado.ambito ? 600 : null);
+  // Barra con extremo redondeado (4 px) y base recta en el cero
+  const h = Math.min(y.bandwidth(), 14);
+  g.select("path").attr("fill", d => d[col] < 0 ? css("--neg") : css("--pos")).attr("d", d => {
+    const x0 = x(0), x1 = x(d[col]), y0 = (y.bandwidth() - h) / 2, r = Math.min(4, Math.abs(x1 - x0) / 2, h / 2);
+    if (Math.abs(x1 - x0) < 0.5) return "";
+    const s = x1 > x0 ? 1 : -1;
+    return `M${x0},${y0}H${x1 - s * r}Q${x1},${y0} ${x1},${y0 + r}V${y0 + h - r}Q${x1},${y0 + h} ${x1 - s * r},${y0 + h}H${x0}Z`;
+  });
+}
+
+// ---------- Puestos ----------
+function puestos() {
+  const datos = deps.filter(enAltitud);
+  const cont = d3.select("#puestos"), W = cont.node().clientWidth;
+  const H = 26 * 18 + 40, m = { t: 24, r: 130, b: 8, l: 130 };
+  const xa = m.l, xb = W - m.r;
+  const y = d3.scaleLinear([1, 26], [m.t, H - m.b]);
+  const svg = cont.selectAll("svg").data([0]).join("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("height", H)
+    .attr("role", "img").attr("aria-label", "Puesto de cada ámbito con cada criterio");
+  svg.selectAll(".cab").data([["RM 363-2022", xa, "end"], ["OMS 2024", xb, "start"]]).join("text").attr("class", "cab")
+    .attr("x", d => d[1] + (d[2] === "end" ? -8 : 8)).attr("y", 10).attr("text-anchor", d => d[2]).style("fill", css("--ink")).style("font-weight", 600).text(d => d[0]);
+  const tono = d => !d.puesto_robusto_ambos ? css("--ns") : d.puesto_oms < d.puesto_363 ? css("--pos") : css("--neg");
+  const g = svg.selectAll(".f").data(datos, d => d.ambito).join(en => {
+    const g = en.append("g").attr("class", "f");
+    g.append("line"); g.append("circle").attr("class", "a"); g.append("circle").attr("class", "b");
+    g.append("text").attr("class", "ta"); g.append("text").attr("class", "tb"); return g;
+  });
+  g.sort((a, b) => (a.puesto_robusto_ambos - b.puesto_robusto_ambos) || ((a.ambito === estado.ambito) - (b.ambito === estado.ambito)));
+  g.style("cursor", "pointer")
+    .on("mousemove", (ev, d) => mostrarTip(ev, `<b>${d.ambito}</b><br>Puesto RM 363-2022: ${d.puesto_363} (IC ${d.puesto_363_li.toFixed(0)}–${d.puesto_363_ls.toFixed(0)})<br>Puesto OMS 2024: ${d.puesto_oms} (IC ${d.puesto_oms_li.toFixed(0)}–${d.puesto_oms_ls.toFixed(0)})<br>En 2024: ${d.puesto_363_2024} → ${d.puesto_oms_2024}<br>${ROBUSTO(d)}`))
+    .on("mouseleave", ocultarTip).on("click", (ev, d) => elegir(d.ambito));
+  const fuerte = d => d.puesto_robusto_ambos || d.ambito === estado.ambito;
+  g.select("line").attr("x1", xa).attr("x2", xb).attr("y1", d => y(d.puesto_363)).attr("y2", d => y(d.puesto_oms))
+    .attr("stroke", tono).attr("stroke-width", d => fuerte(d) ? 2.5 : 1.25).attr("opacity", d => fuerte(d) ? 1 : 0.6);
+  g.select(".a").attr("cx", xa).attr("cy", d => y(d.puesto_363)).attr("r", 4).attr("fill", tono).attr("stroke", css("--surface")).attr("stroke-width", 2);
+  g.select(".b").attr("cx", xb).attr("cy", d => y(d.puesto_oms)).attr("r", 4).attr("fill", tono).attr("stroke", css("--surface")).attr("stroke-width", 2);
+  g.select(".ta").attr("x", xa - 10).attr("y", d => y(d.puesto_363)).attr("dy", "0.32em").attr("text-anchor", "end")
+    .text(d => `${d.ambito} ${d.puesto_363}`).style("fill", d => fuerte(d) ? css("--ink") : null).style("font-weight", d => d.ambito === estado.ambito ? 600 : null);
+  g.select(".tb").attr("x", xb + 10).attr("y", d => y(d.puesto_oms)).attr("dy", "0.32em")
+    .text(d => `${d.puesto_oms} ${d.ambito}`).style("fill", d => fuerte(d) ? css("--ink") : null).style("font-weight", d => d.ambito === estado.ambito ? 600 : null);
+}
+
+// ---------- Tabla ----------
+function tabla() {
+  const cols = [["Ámbito", d => d.ambito], ["n", d => d.n], ["Altitud mediana (m)", d => Math.round(d.altitud_mediana_m)],
+    ["RM 363-2022 (%)", d => num(d.anemia_363)], ["IC 95 %", d => `${num(d.anemia_363_li)}–${num(d.anemia_363_ls)}`],
+    ["OMS 2024 (%)", d => num(d.anemia_oms)], ["IC 95 %", d => `${num(d.anemia_oms_li)}–${num(d.anemia_oms_ls)}`],
+    ["Cambio (pts)", d => pp(d.cambio_pp)], ["IC 95 %", d => `${pp(d.cambio_li)} a ${pp(d.cambio_ls)}`],
+    ["Cambio 2024 (pts)", d => pp(d.cambio_pp_2024)], ["IC 95 %", d => `${pp(d.cambio_li_2024)} a ${pp(d.cambio_ls_2024)}`],
+    ["Efecto altitud", d => pp(d.efecto_altitud_pp)], ["Efecto corte", d => pp(d.efecto_corte_pp)],
+    ["Puesto 363", d => d.puesto_363 ?? "—"], ["Puesto OMS", d => d.puesto_oms ?? "—"],
+    ["Puesto 2024 (363 → OMS)", d => d.puesto_363_2024 == null ? "—" : `${d.puesto_363_2024} → ${d.puesto_oms_2024}`]];
+  const t = d3.select("#tabla");
+  t.append("thead").append("tr").selectAll("th").data(cols).join("th").text(c => c[0]);
+  t.append("tbody").selectAll("tr").data([peru, ...deps.slice().sort((a, b) => a.ambito.localeCompare(b.ambito, "es"))]).join("tr")
+    .selectAll("td").data(d => cols.map(c => c[1](d))).join("td").text(v => v);
+}
+
+function dibujar() { kpis(); mapa(); cambio(); efecto("#ef-altitud", "efecto_altitud_pp"); efecto("#ef-corte", "efecto_corte_pp"); puestos(); }
+tabla(); altitud(); replica(); dibujar();
+let espera; addEventListener("resize", () => { clearTimeout(espera); espera = setTimeout(() => { altitud(); replica(); dibujar(); }, 150); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { altitud(); replica(); dibujar(); });
+</script>
+</body>
+</html>

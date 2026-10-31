@@ -1,0 +1,27 @@
+codigo_inei,encabezado,inei_363,inei_oms,ambito,nota,anemia_363,anemia_oms,coincide_363,coincide_oms
+01,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Amazonas,47.1,46.4,Amazonas,,47.1241,46.4265,1.0,1.0
+02,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Áncash,47.0,37.5,Áncash,,47.0295,37.4689,1.0,1.0
+03,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Apurímac,58.7,43.0,Apurímac,,58.657,43.0064,1.0,1.0
+04,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Arequipa,44.2,43.9,Arequipa,,44.2053,43.8866,1.0,1.0
+05,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Ayacucho,51.0,45.7,Ayacucho,,50.974,45.6557,1.0,1.0
+06,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Cajamarca,38.4,40.6,Cajamarca,,38.4046,40.6415,1.0,1.0
+08,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Cusco,53.8,45.3,Cusco,,53.8027,45.2561,1.0,1.0
+09,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Huancavelica,55.1,32.9,Huancavelica,,55.079,32.9386,1.0,1.0
+10,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Huánuco,44.9,41.7,Huánuco,,44.8589,41.7007,1.0,1.0
+11,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Ica,39.4,31.1,Ica,,39.357,31.0546,1.0,1.0
+12,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Junín,50.5,41.2,Junín,,50.495,41.1574,1.0,1.0
+13,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de La Libertad,36.0,25.6,La Libertad,,35.9625,25.5713,1.0,1.0
+14,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Lambayeque,36.5,36.5,Lambayeque,La sección OMS 2024 repite el texto de la sección RM 363-2022,36.537,25.8915,1.0,0.0
+16,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Loreto,62.0,50.9,Loreto,,61.9753,50.9104,1.0,1.0
+17,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Madre de Dios,56.3,45.5,Madre de Dios,,56.3414,45.5253,1.0,1.0
+18,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Moquegua [revisar: 0 menciones],,,Moquegua,Solo publica 6-59 meses,39.0477,38.631,,
+19,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Pasco,54.4,36.2,Pasco,,54.3681,36.1981,1.0,1.0
+20,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Piura,42.4,35.4,Piura,,42.4178,35.3753,1.0,1.0
+21,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Puno,76.0,53.1,Puno,,76.0315,53.1195,1.0,1.0
+22,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de San Martín,38.4,34.6,San Martín,,38.3758,34.5879,1.0,1.0
+23,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Tacna,35.7,32.9,Tacna,,35.6764,32.8557,1.0,1.0
+24,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Tumbes,45.6,34.6,Tumbes,,45.6226,34.6232,1.0,1.0
+25,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Ucayali,54.6,42.8,Ucayali,,54.6472,42.7714,1.0,1.0
+15,Encuesta Demográfica y de Salud Familiar 2024 / Lima Metropolitana,32.9,24.0,Lima Metropolitana,,32.9287,23.9681,1.0,1.0
+15_1,Encuesta Demográfica y de Salud Familiar 2024 / Departamento de Lima,42.4,30.3,Lima Provincias,,42.3531,30.3102,1.0,1.0
+15_2,Encuesta Demográfica y de Salud Familiar 2024 / Provincia Constitucional del Callao,34.9,24.5,Callao,,34.9257,24.5218,1.0,1.0

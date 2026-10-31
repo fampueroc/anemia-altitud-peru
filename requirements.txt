@@ -1,0 +1,9 @@
+# Análisis (scripts/)
+pandas
+numpy
+pyreadstat
+geopandas
+shapely
+# Versión Streamlit (app.py)
+streamlit
+plotly
