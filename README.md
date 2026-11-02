@@ -98,5 +98,5 @@ reel/               guion y recursos del reel
 
 ## Uso de inteligencia artificial
 
-- **Claude Code (Anthropic)** ayudó a escribir el código de análisis y del dashboard, a buscar y verificar la literatura y a redactar los textos. Las cifras que el INEI publica se contrastaron con sus informes (detalle en `docs/validacion.md`), y el estado de verificación de cada fuente está en `docs/literatura.md`. Las decisiones del análisis (tema, pregunta, qué hallazgos destacar y cómo formularlos) fueron mías.
+- **Claude Code (Anthropic)** ayudó a escribir el código de análisis y del dashboard, a buscar y verificar la literatura y a redactar parcialmente los textos. Las cifras que el INEI publica se contrastaron con sus informes (detalle en `docs/validacion.md`), y el estado de verificación de cada fuente está en `docs/literatura.md`. Las decisiones del análisis y la revisión (tema, pregunta, qué hallazgos destacar y cómo formularlos) fueron mías.
 - **Reel:** la narración usa mi voz clonada con Qwen3-TTS (Alibaba, Apache 2.0) a partir de una grabación mía, y los subtítulos se generaron con Whisper (MIT). Los dos modelos corren en local. El video lo indica con el aviso "Voz generada con IA".
