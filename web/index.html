@@ -110,8 +110,8 @@ th:first-child, td:first-child { text-align: left; }
   </header>
 
   <section class="hallazgos" aria-label="Hallazgos">
-    <div class="hallazgo"><b>1. La caída no fue pareja</b>En 2025 baja en 20 de 26 ámbitos. En 5 (Amazonas, Arequipa, Cajamarca, Huánuco y Moquegua) el cambio no se distingue de cero, ni en 2025 ni en 2024.</div>
-    <div class="hallazgo"><b>2. La altitud explica el patrón</b>Entre 500 y 2499 m la nueva fórmula sube la anemia entre 7 y 11 puntos. Por encima de 3000 m la baja entre 14 y 34 puntos. El patrón se repite con la ENDES 2024.</div>
+    <div class="hallazgo"><b>1. La baja no fue pareja</b>En 2025 baja en 20 de 26 ámbitos. En 5 (Amazonas, Arequipa, Cajamarca, Huánuco y Moquegua) el cambio no se distingue de cero, ni en 2025 ni en 2024.</div>
+    <div class="hallazgo"><b>2. El patrón depende de la altitud</b>Con la nueva fórmula, la cifra de anemia sube entre 7 y 11 puntos entre 500 y 2499 m, y baja entre 14 y 34 puntos por encima de 3000 m. El patrón se repite con la ENDES 2024.</div>
     <div class="hallazgo"><b>3. Cambia el orden</b>Con los datos de 2025 y de 2024, Amazonas, Arequipa y Cajamarca suben en el orden y Pasco baja. Puno sigue primero con ambos criterios.</div>
   </section>
 
@@ -469,7 +469,7 @@ function efecto(id, col) {
   const x = d3.scaleLinear([-20, 20], [m.l, W - m.r]);
   const y = d3.scaleBand(datos.map(d => d.ambito), [m.t, H - m.b]).padding(0.25);
   const svg = cont.selectAll("svg").data([0]).join("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("height", H)
-    .attr("role", "img").attr("aria-label", "Efecto por ámbito");
+    .attr("role", "img").attr("aria-label", "Cambio con una sola regla, por ámbito");
   svg.selectAll(".rejilla").data([0]).join("g").attr("class", "rejilla").attr("transform", `translate(0,${H - m.b})`)
     .call(d3.axisBottom(x).ticks(4).tickSize(-(H - m.t - m.b)).tickFormat(""));
   svg.selectAll(".eje").data([0]).join("g").attr("class", "eje").attr("transform", `translate(0,${H - m.b})`)
@@ -532,7 +532,7 @@ function tabla() {
     ["OMS 2024 (%)", d => num(d.anemia_oms)], ["IC 95 %", d => `${num(d.anemia_oms_li)}–${num(d.anemia_oms_ls)}`],
     ["Cambio (pts)", d => pp(d.cambio_pp)], ["IC 95 %", d => `${pp(d.cambio_li)} a ${pp(d.cambio_ls)}`],
     ["Cambio 2024 (pts)", d => pp(d.cambio_pp_2024)], ["IC 95 %", d => `${pp(d.cambio_li_2024)} a ${pp(d.cambio_ls_2024)}`],
-    ["Efecto altitud", d => pp(d.efecto_altitud_pp)], ["Efecto corte", d => pp(d.efecto_corte_pp)],
+    ["Solo fórmula de altitud", d => pp(d.efecto_altitud_pp)], ["Solo punto de corte", d => pp(d.efecto_corte_pp)],
     ["Puesto 363", d => d.puesto_363 ?? "—"], ["Puesto OMS", d => d.puesto_oms ?? "—"],
     ["Puesto 2024 (363 → OMS)", d => d.puesto_363_2024 == null ? "—" : `${d.puesto_363_2024} → ${d.puesto_oms_2024}`]];
   const t = d3.select("#tabla");

@@ -29,7 +29,7 @@ ESCENA 2
 
 ESCENA 3
   Voz:       La diferencia depende de la altitud: la guía nueva ajusta la hemoglobina de otra forma según dónde viven las niñas y los niños.
-  Pantalla:  La clave está en el ajuste por altitud
+  Pantalla:  Cambia el ajuste por altitud
   Fuente:    WHO 2024, Tabla 4; RM 363-2022 (CDC 1989)
 
 ESCENA 4

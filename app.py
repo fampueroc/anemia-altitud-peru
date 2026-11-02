@@ -74,10 +74,10 @@ st.caption("ENDES 2025 (INEI), microdatos · Réplica con la ENDES 2024 · Cálc
            "Intervalos de confianza al 95 %")
 
 h1, h2, h3 = st.columns(3)
-h1.markdown("**1. La caída no fue pareja**  \nEn 2025 baja en 20 de 26 ámbitos. En 5 (Amazonas, Arequipa, Cajamarca, "
+h1.markdown("**1. La baja no fue pareja**  \nEn 2025 baja en 20 de 26 ámbitos. En 5 (Amazonas, Arequipa, Cajamarca, "
             "Huánuco y Moquegua) el cambio no se distingue de cero, ni en 2025 ni en 2024.")
-h2.markdown("**2. La altitud explica el patrón**  \nEntre 500 y 2499 m la nueva fórmula sube la anemia entre 7 y "
-            "11 puntos. Por encima de 3000 m la baja entre 14 y 34 puntos. El patrón se repite con la ENDES 2024.")
+h2.markdown("**2. El patrón depende de la altitud**  \nCon la nueva fórmula, la cifra de anemia sube entre 7 y 11 puntos "
+            "entre 500 y 2499 m, y baja entre 14 y 34 puntos por encima de 3000 m. El patrón se repite con la ENDES 2024.")
 h3.markdown("**3. Cambia el orden**  \nCon los datos de 2025 y de 2024, Amazonas, Arequipa y Cajamarca "
             "suben en el orden y Pasco baja. Puno sigue primero con ambos criterios.")
 

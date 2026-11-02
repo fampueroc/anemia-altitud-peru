@@ -48,7 +48,7 @@ Es un análisis **descriptivo**: muestra cómo cambia la cifra según el criteri
 ## Hallazgos
 
 1. **La baja no fue pareja.** En 2025 la anemia baja de forma significativa en 20 de 26 ámbitos. En 5 (Amazonas, Arequipa, Cajamarca, Huánuco y Moquegua) el cambio no se distingue de cero, ni en 2025 ni en 2024.
-2. **El patrón depende de la altitud.** Entre 500 y 2499 m la nueva fórmula sube la anemia entre 6,9 y 11,2 puntos. Desde 3000 m la baja entre 13,6 y 34,1 puntos (ENDES 2025). El patrón se repite con la ENDES 2024, también usando solo los conglomerados que no están en 2025. Coincide con lo que reporta Hernández-Vásquez et al. (2025) con datos de establecimientos de salud.
+2. **El patrón depende de la altitud.** Con la nueva fórmula, la cifra de anemia sube entre 6,9 y 11,2 puntos entre 500 y 2499 m, y baja entre 13,6 y 34,1 puntos desde 3000 m (ENDES 2025). El patrón se repite con la ENDES 2024, también usando solo los conglomerados que no están en 2025. Coincide con lo que reporta Hernández-Vásquez et al. (2025) con datos de establecimientos de salud.
 3. **Cambia el orden.** Con los datos de 2025 y de 2024, Amazonas, Arequipa y Cajamarca suben en el orden de anemia y Pasco baja. Puno sigue primero con ambos criterios.
 
 ## Limitaciones
