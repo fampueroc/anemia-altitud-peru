@@ -2,9 +2,13 @@
 
 **Cómo cambia la anemia en niñas y niños de 6 a 35 meses al pasar del criterio RM 363-2022-MINSA al de la OMS 2024, y qué tiene que ver la altitud.**
 
-- **Dashboard:** https://fampueroc.github.io/anemia-altitud-peru/ *(se activa al publicar con GitHub Pages)*
-- **Post en LinkedIn:** *(pendiente)*
+- **Dashboard:** https://fampueroc.github.io/anemia-altitud-peru/
+- **Post en LinkedIn (con el reel):** https://lnkd.in/p/drgqprTG
 - **Autoría:** Fiorella Ampuero · Diplomado de Data Science con Python, PUCP · Tarea 3
+
+![Vista general del dashboard](docs/capturas/dashboard_general.png)
+
+![Dashboard con Cajamarca seleccionada, con su cambio y su puesto](docs/capturas/dashboard_cajamarca.png)
 
 ## Tema y pregunta
 
