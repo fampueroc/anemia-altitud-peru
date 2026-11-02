@@ -8,6 +8,7 @@ Reel vertical (1080×1920) de 45 a 75 segundos, narrado con la voz clonada de la
 | `reel.py` | Voz clonada (Qwen3-TTS), subtítulos (Whisper), video (Pillow + ffmpeg), créditos y música |
 | `hacer_reel.py` | Corre todo desde la terminal |
 | `armar_reel.py` | Arma el reel final con las tomas elegidas, sin volver a generar la voz |
+| `visuales.py` | Mapas y gráfico por altitud del reel, a partir de `datos/procesados` |
 | `probar_voz.py` | Prueba corta de la voz clonada |
 
 ## Entorno

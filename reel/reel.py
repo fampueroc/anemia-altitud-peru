@@ -32,6 +32,7 @@ ASR = "large-v3-turbo"
 ANCHO, ALTO, FPS = 1080, 1920, 30
 MARGEN = 90
 FONDO, TEXTO, SUAVE, ACENTO, CAJA = "#1C1A17", "#F7F3EC", "#B8AE9F", "#F08A4B", "#2A2723"
+SUB_CAJA, SUB_TEXTO, SUB_ACTIVA, SUB_TAMANO = "#000000", "#FFFFFF", "#A78BFA", 50   # subtítulos, fuera de la paleta del resto
 PAUSA, INICIO, FINAL = 0.35, 0.3, 0.8   # segundos de silencio entre escenas, al inicio y al final
 CREDITOS = 4.5                           # segundos de la escena de créditos, sin narración
 VOLUMEN_MUSICA = 0.25                   # la música va muy por debajo de la voz
@@ -337,7 +338,7 @@ def _cuadro(base, capas, narracion, t, bloques, fuente_sub, creditos=None):
     # escena actual, con una entrada suave (aparece y sube) en sus primeros 0.35 s
     i = max([k for k, (ini, _) in enumerate(narracion.escenas) if ini - PAUSA <= t] or [0])
     a = min(1.0, max(0.0, (t - narracion.escenas[i][0] + PAUSA) / 0.35))
-    capa = capas[i]
+    capa = capas[i](t) if callable(capas[i]) else capas[i]   # una capa puede cambiar durante la escena
     if a < 1:
         capa = capa.copy()
         capa.putalpha(capa.getchannel("A").point(lambda v: int(v * a)))
@@ -354,14 +355,14 @@ def _cuadro(base, capas, narracion, t, bloques, fuente_sub, creditos=None):
         texto = " ".join(p[2] for p in b)
         w = d.textlength(texto, font=fuente_sub)
         x, y = (ANCHO - w) / 2, 1290
-        d.rounded_rectangle((x - 36, y - 26, x + w + 36, y + fuente_sub.size + 34), radius=28, fill=CAJA)
+        d.rounded_rectangle((x - 36, y - 26, x + w + 36, y + fuente_sub.size + 34), radius=28, fill=SUB_CAJA)
         for ini, fin, palabra in b:
-            d.text((x, y), palabra, font=fuente_sub, fill=ACENTO if ini <= t <= fin + 0.05 else TEXTO)
+            d.text((x, y), palabra, font=fuente_sub, fill=SUB_ACTIVA if ini <= t <= fin + 0.05 else SUB_TEXTO)
             x += d.textlength(palabra + " ", font=fuente_sub)
     return img
 
 
-def video(guion, narracion, ruta, fuente_datos, autor, musica=None):
+def video(guion, narracion, ruta, fuente_datos, autor, musica=None, capas=None):
     """Dibuja cada cuadro con Pillow y se los pasa a ffmpeg junto con la narración normalizada a -14 LUFS.
 
     Al final agrega CREDITOS segundos con la escena de créditos. Si hay `musica`, se repite o corta al largo
@@ -372,10 +373,10 @@ def video(guion, narracion, ruta, fuente_datos, autor, musica=None):
     total = narracion.duracion + CREDITOS
     sf.write(wav, np.concatenate([narracion.audio, np.zeros(int(CREDITOS * narracion.sr), np.float32)]), narracion.sr)
     base = _base(guion["titulo"], fuente_datos, autor)
-    capas = [_escena(e) for e in guion["escenas"]]
+    capas = capas or [_escena(e) for e in guion["escenas"]]
     creditos = _creditos(guion, base)
     bloques = _bloques(narracion.palabras)
-    fuente_sub = _fuente("PublicSans", 62, 800)
+    fuente_sub = _fuente("PublicSans", SUB_TAMANO, 700)
     entradas = ["-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{ANCHO}x{ALTO}", "-r", str(FPS), "-i", "-",
                 "-i", str(wav)]
     norma = "loudnorm=I=-14:TP=-1.5:LRA=11"
@@ -399,11 +400,11 @@ def video(guion, narracion, ruta, fuente_datos, autor, musica=None):
     return ruta
 
 
-def portada(guion, narracion, ruta, fuente_datos, autor, escena=1):
+def portada(guion, narracion, ruta, fuente_datos, autor, escena=1, capas=None):
     """Un cuadro fijo para revisar el diseño o usar como miniatura."""
     t = narracion.escenas[escena][0] + 1.0
-    img = _cuadro(_base(guion["titulo"], fuente_datos, autor), [_escena(e) for e in guion["escenas"]],
-                  narracion, t, _bloques(narracion.palabras), _fuente("PublicSans", 62, 800))
+    img = _cuadro(_base(guion["titulo"], fuente_datos, autor), capas or [_escena(e) for e in guion["escenas"]],
+                  narracion, t, _bloques(narracion.palabras), _fuente("PublicSans", SUB_TAMANO, 700))
     img.save(ruta)
     return ruta
 
